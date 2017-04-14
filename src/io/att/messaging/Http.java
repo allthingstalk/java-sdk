@@ -13,15 +13,18 @@ import io.att.util.Device;
 
 public class Http {
 
-  private static final String baseUrl = "https://api.allthingstalk.io/";
+  //private static final String baseUrl = "https://api.allthingstalk.io/";
+  private static final String baseUrl = "https://tasty.allthingstalk.io/";
 
   private String clientId, clientKey, deviceId;
+  private String token;
 
   public Http(Device device)
   {
     this.clientId  = device.getClientId();
     this.clientKey = device.getClientKey();
     this.deviceId  = device.getDeviceId();
+    this.token     = device.getToken();
   }
   
  /****
@@ -31,7 +34,6 @@ public class Http {
   * @param description
   * @param type (sensor, actuator, virtual, config)
   * @param profile
-  * @param control [optional]
   * @return
   */
  public String addAsset(String name, String title, String description, String type, String profile)
@@ -40,15 +42,14 @@ public class Http {
 
    try
    {
-     String url = baseUrl + "device/" + deviceId + "/asset/" + name;
+     String url = baseUrl + "/device/" + deviceId + "/assets";
      URL obj = new URL(url);
      HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
      // Add request header
-     con.setRequestMethod("PUT");
+     con.setRequestMethod("POST");
      con.setRequestProperty("Content-Type", "application/json");
-     con.setRequestProperty("Auth-ClientKey", clientKey);
-     con.setRequestProperty("Auth-ClientId", clientId);
+     con.setRequestProperty("Authorization", "Bearer " + token);
 
      // Create request body
      StringBuffer sb = new StringBuffer();
@@ -57,9 +58,8 @@ public class Http {
      sb.append(String.format("\"name\":\"%s\",",        title));
      sb.append(String.format("\"description\":\"%s\",", description));
      sb.append(String.format("\"is\":\"%s\",",          type));
-     System.out.println(profile);
      if(profile.indexOf("type") < 0)
-       sb.append(String.format("\"profile\":{\"type\": \"%s\"}", profile));  // todo check for complex profiles
+       sb.append(String.format("\"profile\":{\"type\": \"%s\"}", profile));
      else
      {
        sb.append("\"profile\":{\"type\": \"object\",");
@@ -72,7 +72,6 @@ public class Http {
      sb.append("}");
      
      String urlParameters = sb.toString();
-     System.out.println(sb.toString());
     
      // Send post request
      con.setDoOutput(true);
@@ -126,8 +125,7 @@ public class Http {
       // Add request header
       con.setRequestMethod("PUT");
       con.setRequestProperty("Content-Type", "application/json");
-      con.setRequestProperty("Auth-ClientKey", clientKey);
-      con.setRequestProperty("Auth-ClientId", clientId);
+      con.setRequestProperty("Authorization", "Bearer " + token);
 
       // Create request body
       String urlParameters;

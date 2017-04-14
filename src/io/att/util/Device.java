@@ -33,6 +33,7 @@ public class Device implements Runnable {
   private String deviceId;
   private String clientId;
   private String clientKey;
+  private String token;
   
   private String subTopic;
   private String pubTopic;
@@ -62,6 +63,17 @@ public class Device implements Runnable {
     this.subTopic  = String.format("client/%s/in/device/%s/asset/+/command", clientId, deviceId);  // listen for command
     this.pubTopic  = String.format("client/%s/out/device/%s/asset/", clientId, deviceId);
   }
+  
+  public Device(String deviceId, String token, AttDevice attdevice)
+  {
+    this.attdevice = attdevice;
+    setRate(1);  // default 1 ticks per second
+    
+    this.deviceId  = deviceId;
+    this.token = token;
+    this.subTopic  = String.format("client/%s/in/device/%s/asset/+/command", clientId, deviceId);  // listen for command
+    this.pubTopic  = String.format("client/%s/out/device/%s/asset/", clientId, deviceId);
+  }
 
   /**
    * Creates a Http instance with the credentials of the device for our API calls.
@@ -78,6 +90,8 @@ public class Device implements Runnable {
   {
     mqtt = new Mqtt(this);  // connect to mqtt and subscribe to the assets of this device
   }
+  
+  public Http getHttp() { return http; }
   
   /**
    * Add an asset to your device in AllThingsTalk.
@@ -155,6 +169,7 @@ public class Device implements Runnable {
   public String getDeviceId()  { return deviceId;  }
   public String getClientId()  { return clientId;  }
   public String getClientKey() { return clientKey; }
+  public String getToken()     { return token;     }
   
   public String getSubTopic() { return subTopic; }
   public String getPubTopic() { return pubTopic;}
