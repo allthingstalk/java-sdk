@@ -14,15 +14,14 @@ import io.att.util.Device;
 public class Http {
 
   //private static final String baseUrl = "https://api.allthingstalk.io/";
-  private static final String baseUrl = "https://tasty.allthingstalk.io/";
+  //private static final String baseUrl = "https://tasty.allthingstalk.io/";
+  private static final String baseUrl = "https://spicy.allthingstalk.io/";
 
   private String clientId, clientKey, deviceId;
   private String token;
 
   public Http(Device device)
   {
-    this.clientId  = device.getClientId();
-    this.clientKey = device.getClientKey();
     this.deviceId  = device.getDeviceId();
     this.token     = device.getToken();
   }
@@ -42,7 +41,7 @@ public class Http {
 
    try
    {
-     String url = baseUrl + "/device/" + deviceId + "/assets";
+     String url = baseUrl + "device/" + deviceId + "/assets";
      URL obj = new URL(url);
      HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
@@ -58,7 +57,7 @@ public class Http {
      sb.append(String.format("\"name\":\"%s\",",        title));
      sb.append(String.format("\"description\":\"%s\",", description));
      sb.append(String.format("\"is\":\"%s\",",          type));
-     if(profile.indexOf("type") < 0)
+     if(profile.indexOf(",") < 0)
        sb.append(String.format("\"profile\":{\"type\": \"%s\"}", profile));
      else
      {
@@ -132,7 +131,11 @@ public class Http {
       if(value instanceof String)
       {
         if(isComplex)
+        {
+          System.out.println("Sending complex");
+          //urlParameters = String.format("{\"at\":\"2016-04-02T14:56:30.957378Z\",\"value\":{%s}}", value);
           urlParameters = String.format("{\"value\":{%s}}", value);
+        }
         else
           urlParameters = String.format("{\"value\":\"%s\"}", value);
       }

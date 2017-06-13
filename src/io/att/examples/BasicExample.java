@@ -6,11 +6,8 @@ import io.att.util.AttDevice;
 public class BasicExample implements AttDevice {
   
   // device credentials
-  private static final String deviceId  = "tEkRSgGVvSdX0cauyWzALXy1";
-  private static final String clientId  = "your_cliend_id";
-  private static final String clientKey = "your_client_key";
-  
-  private static final String token = "4LPU4SCBWwynG0lqFwxHh123GV5wQnjG4Cciky4";
+  private static final String deviceId  = "4scA0xAXs71iwbze3ugTAk7w";
+  private static final String token     = "spicy:4OLvfJU4aMgVW1VeVsb6iOzJtOuyswvEghpcJQz0";
   
   static Device device;
  
@@ -26,18 +23,20 @@ public class BasicExample implements AttDevice {
     // Set up Http and create assets
     device.setupHttp();
     device.getHttp().addAsset("Counter", "Counter", "Tick counter", "sensor", "integer");
+    device.getHttp().addAsset("GPS", "GPS", "Location", "sensor", "\"latitude\":{\"type\":\"number\"},\"longitude\":{\"type\":\"number\"}");
     
     // Set (initial) asset states through http
     device.setAssetState("Counter", 10);
+    device.setComplexAssetState("GPS", "\"latitude\":3.0735,\"longitude\":51.45678");
     
     try{Thread.sleep(1000);}catch(Exception e){}
     
     // Subscribe to mqtt
-    //device.setupMqtt();
-    //device.setRate(1);  // set loop at x ticks per second (tick method is called at this rate)
+    device.setupMqtt();
+    device.setRate(1);  // set loop at x ticks per second (tick method is called at this rate)
     
     // Initializing done. Start looping
-    //device.start();
+    device.start();
   }
 
   public void tick()

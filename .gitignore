@@ -23,3 +23,5 @@ local.properties
 ### Java template
 *.class
 
+setup.bat
+setup.sh

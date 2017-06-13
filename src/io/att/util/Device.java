@@ -31,8 +31,6 @@ public class Device implements Runnable {
    %*/
 
   private String deviceId;
-  private String clientId;
-  private String clientKey;
   private String token;
   
   private String subTopic;
@@ -48,22 +46,10 @@ public class Device implements Runnable {
    * Constructor for our device, containing all needed credentials.
    * 
    * @param <type>deviceId</type> the id of your device from AllThingsTalk
-   * @param <type>clientId</type> the client id of your AllThingsTalk account
-   * @param <type>clientKey</type> the client key of your AllThingsTalk account
+   * @param <type>token</type> the authentication token of your device
    * @param <type>attdevice</type> the interface your main program implements. See [AttDevice.java](#attdevicejava) for more info
    */
-  public Device(String deviceId, String clientId, String clientKey, AttDevice attdevice)
-  {
-    this.attdevice = attdevice;
-    setRate(1);  // default 1 ticks per second
-    
-    this.deviceId  = deviceId;
-    this.clientId  = clientId;
-    this.clientKey = clientKey;
-    this.subTopic  = String.format("client/%s/in/device/%s/asset/+/command", clientId, deviceId);  // listen for command
-    this.pubTopic  = String.format("client/%s/out/device/%s/asset/", clientId, deviceId);
-  }
-  
+
   public Device(String deviceId, String token, AttDevice attdevice)
   {
     this.attdevice = attdevice;
@@ -71,8 +57,10 @@ public class Device implements Runnable {
     
     this.deviceId  = deviceId;
     this.token = token;
-    this.subTopic  = String.format("client/%s/in/device/%s/asset/+/command", clientId, deviceId);  // listen for command
-    this.pubTopic  = String.format("client/%s/out/device/%s/asset/", clientId, deviceId);
+    //this.subTopic  = String.format("client/%s/in/device/%s/asset/+/command", clientId, deviceId);  // listen for command
+    //this.pubTopic  = String.format("client/%s/out/device/%s/asset/", clientId, deviceId);
+    this.subTopic = String.format("device/%s/asset/+/command", deviceId);  // listen for command
+    this.pubTopic = String.format("device/%s/asset/", deviceId);
   }
 
   /**
@@ -167,8 +155,6 @@ public class Device implements Runnable {
   }
   
   public String getDeviceId()  { return deviceId;  }
-  public String getClientId()  { return clientId;  }
-  public String getClientKey() { return clientKey; }
   public String getToken()     { return token;     }
   
   public String getSubTopic() { return subTopic; }

@@ -46,8 +46,10 @@ public class Mqtt implements MqttCallback {
       this.conOpt = new MqttConnectOptions();
       this.conOpt.setCleanSession(true);
       
-      String code     = device.getClientKey();
-      String username = device.getClientId() + ":" + device.getClientId();
+      //String code     = device.getClientKey();
+      //String username = device.getClientId() + ":" + device.getClientId();
+      String code = "";
+      String username = device.getToken();
 
       if(code     != null) { conOpt.setPassword(code.toCharArray()); }
       if(username != null) { conOpt.setUserName(username); }
@@ -66,12 +68,14 @@ public class Mqtt implements MqttCallback {
     
     // subscribe to asset state and commands for this device
     connect();
+    /*
     try
     {
       subscribe(device.getSubTopic());
     } catch (MqttException e) {
       e.printStackTrace();
     }
+    */
     System.out.println("Mqtt initialized");
   }
   
