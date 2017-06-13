@@ -54,7 +54,8 @@ public class Http {
      StringBuffer sb = new StringBuffer();
      
      sb.append("{");
-     sb.append(String.format("\"name\":\"%s\",",        title));
+     sb.append(String.format("\"name\":\"%s\",",        name));
+     sb.append(String.format("\"title\":\"%s\",",       title));
      sb.append(String.format("\"description\":\"%s\",", description));
      sb.append(String.format("\"is\":\"%s\",",          type));
      if(profile.indexOf(",") < 0)

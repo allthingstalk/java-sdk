@@ -23,11 +23,11 @@ public class BasicExample implements AttDevice {
     // Set up Http and create assets
     device.setupHttp();
     device.getHttp().addAsset("Counter", "Counter", "Tick counter", "sensor", "integer");
-    device.getHttp().addAsset("GPS", "GPS", "Location", "sensor", "\"latitude\":{\"type\":\"number\"},\"longitude\":{\"type\":\"number\"}");
+    device.getHttp().addAsset("LED", "Blinky", "Blinking LED", "actuator", "boolean");
     
     // Set (initial) asset states through http
     device.setAssetState("Counter", 10);
-    device.setComplexAssetState("GPS", "\"latitude\":3.0735,\"longitude\":51.45678");
+    device.setAssetState("LED", false);
     
     try{Thread.sleep(1000);}catch(Exception e){}
     

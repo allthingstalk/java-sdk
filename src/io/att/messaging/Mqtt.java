@@ -1,8 +1,5 @@
 package io.att.messaging;
 
-import io.att.util.AttDevice;
-import io.att.util.Device;
-
 import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -14,6 +11,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
+import org.json.JSONObject;
+
+import io.att.util.AttDevice;
+import io.att.util.Device;
 
 public class Mqtt implements MqttCallback {
   
@@ -68,14 +69,12 @@ public class Mqtt implements MqttCallback {
     
     // subscribe to asset state and commands for this device
     connect();
-    /*
     try
     {
       subscribe(device.getSubTopic());
     } catch (MqttException e) {
       e.printStackTrace();
     }
-    */
     System.out.println("Mqtt initialized");
   }
   
@@ -193,14 +192,15 @@ public class Mqtt implements MqttCallback {
    */
   public void messageArrived(String topic, MqttMessage message) throws InterruptedException
   {
-    String asset = topic.split("/")[6];
+    String asset = topic.split("/")[3];
     String value = new String(message.getPayload());
-    System.out.println("Actuator command received:");
+    System.out.print("Actuator command received from asset: ");
     System.out.println(asset);
-    System.out.println(value);
+    
+    Object val = new JSONObject(value).get("value");
     
     // publish value back to the cloud to acknowledge we received it
-    publish(asset, value);
-    attdevice.callback(asset, value);
+    publish(asset, val.toString());
+    attdevice.callback(asset, val.toString());
   }
 }
