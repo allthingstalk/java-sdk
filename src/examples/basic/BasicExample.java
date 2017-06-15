@@ -1,6 +1,12 @@
-package io.att.examples;
+package basic;
 
 import io.att.util.Device;
+
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+
 import io.att.util.AttDevice;
 
 public class BasicExample implements AttDevice {
@@ -10,6 +16,10 @@ public class BasicExample implements AttDevice {
   private static final String token     = "spicy:4OLvfJU4aMgVW1VeVsb6iOzJtOuyswvEghpcJQz0";
   
   static Device device;
+  static final GpioController gpio = GpioFactory.getInstance();
+  
+  // sensor pin setup
+  GpioPinDigitalOutput ledPin;
  
   // variables
   static boolean ledValue;
@@ -28,6 +38,9 @@ public class BasicExample implements AttDevice {
     // Set (initial) asset states through http
     device.setAssetState("Counter", 10);
     device.setAssetState("LED", false);
+    
+    // Initialize gpio pins
+    ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
     
     try{Thread.sleep(1000);}catch(Exception e){}
     
@@ -49,6 +62,11 @@ public class BasicExample implements AttDevice {
   {
     if(asset.equals("LED"))
       ledValue = Boolean.parseBoolean(value);
+    
+    if(ledValue == true)
+      ledPin.high();  // turn on the LED
+    else
+      ledPin.low();  // turn off the LED
     
     System.out.println(ledValue);
   }
