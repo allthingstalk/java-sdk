@@ -27,7 +27,7 @@ Start up your raspberry pi and log in through SSH (for example using PuTTy)
 
 ### Compile the example
 
-* `cd ~/java-sdk _(back to sdk root folder)_`
+* `cd ~/java-sdk` _(back to sdk root folder)_
 * `javac -cp .:lib/* src/examples/BasicExample.java` 
 
 ### Run the example
