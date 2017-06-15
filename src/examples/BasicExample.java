@@ -1,13 +1,12 @@
-package basic;
-
-import io.att.util.Device;
-
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinAnalogInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
+//import com.pi4j.wiringpi.Gpio;
 
 import io.att.util.AttDevice;
+import io.att.util.Device;
 
 public class BasicExample implements AttDevice {
   
@@ -20,6 +19,7 @@ public class BasicExample implements AttDevice {
   
   // sensor pin setup
   GpioPinDigitalOutput ledPin;
+  GpioPinAnalogInput   buttonPin; 
  
   // variables
   static boolean ledValue;
@@ -40,7 +40,9 @@ public class BasicExample implements AttDevice {
     device.setAssetState("LED", false);
     
     // Initialize gpio pins
-    ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+    ledPin    = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+    //buttonPin = gpio.provisionAnalogInputPin(RaspiPin.GPIO_02);
+    //Gpio.pinMode(2, Gpio.INPUT);
     
     try{Thread.sleep(1000);}catch(Exception e){}
     
@@ -56,6 +58,8 @@ public class BasicExample implements AttDevice {
   {
     count++;
     device.publish("Counter", count);
+    
+    //int button = Gpio.analogRead(2);
   }
   
   public void callback(String asset, String value)
