@@ -29,15 +29,18 @@ Start up your raspberry pi and log in through SSH (for example using PuTTy)
 
 * `cd java-sdk/src/examples`
 * `sudo nano BasicExample.java`
-* enter device id and token
+* enter device id and token _(required)_ and endpoint _(optional)_
 
 ```
   // device credentials
   private static final String deviceId  = "4scA0xAXs71iwbze3ugTAk7w";
   private static final String token     = "spicy:4OLvfJU4aMgVW1VeVsb6iOzJtOuyswvEghpcJQz0";
+  private static final String endpoint  = "";  // optional
 ```
 
 * save and exit (ctrl-x; y)
+
+> If no endpoint is provided, the default _api.allthingstalk.io_ will be used for http and mqtt
 
 ### Compile the example
 

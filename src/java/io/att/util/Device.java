@@ -1,28 +1,29 @@
 package io.att.util;
 
+import io.att.messaging.Broker;
 import io.att.messaging.Http;
 import io.att.messaging.Mqtt;
 
-/*
-  Copyright 2017 AllThingsTalk
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-      http://www.apache.org/licenses/LICENSE-2.0
-      
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-  @Author Sander Hendrickx
-  
-*/
+/*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
+ *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
+ *  / _ \| | | | | | ' \| | ' \/ _` (_-< | |/ _` | | / / \__ \ |) | ' <
+ * /_/ \_\_|_| |_| |_||_|_|_||_\__, /__/ |_|\__,_|_|_\_\ |___/___/|_|\_\
+ *                             |___/
+ *
+ * Copyright 2017 AllThingsTalk
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 public class Device implements Runnable {
   
@@ -32,6 +33,7 @@ public class Device implements Runnable {
 
   private String deviceId;
   private String token;
+  private String endpoint;
   
   private String subTopic;
   private String pubTopic;
@@ -48,19 +50,26 @@ public class Device implements Runnable {
    * @param <type>deviceId</type> the id of your device from AllThingsTalk
    * @param <type>token</type> the authentication token of your device
    * @param <type>attdevice</type> the interface your main program implements. See [AttDevice.java](#attdevicejava) for more info
+   * @param <type>endpoint</type> the messaging endpoint for mqtt and http. By default _api.allthingstalk.io_ is used
    */
-
-  public Device(String deviceId, String token, AttDevice attdevice)
+  public Device(AttDevice attdevice, String deviceId, String token, String endpoint)
   {
     this.attdevice = attdevice;
     setRate(1);  // default 1 ticks per second
     
-    this.deviceId  = deviceId;
-    this.token = token;
-    //this.subTopic  = String.format("client/%s/in/device/%s/asset/+/command", clientId, deviceId);  // listen for command
-    //this.pubTopic  = String.format("client/%s/out/device/%s/asset/", clientId, deviceId);
+    this.deviceId = deviceId;
+    this.token    = token;
+    this.endpoint = endpoint;
+    if(endpoint != null && !endpoint.isEmpty())
+      Broker.broker = endpoint;
+    
     this.subTopic = String.format("device/%s/asset/+/command", deviceId);  // listen for command
     this.pubTopic = String.format("device/%s/asset/", deviceId);
+  }
+  
+  public Device(AttDevice attdevice, String deviceId, String token)
+  {
+    this(attdevice, deviceId, token, null);
   }
 
   /**
@@ -162,6 +171,8 @@ public class Device implements Runnable {
   
   public AttDevice getAttDevice() { return attdevice; }
   
+  public String getEndpoint() { return endpoint; }
+  
   private double nsPerTick;
   
   /**
@@ -172,7 +183,7 @@ public class Device implements Runnable {
   public void setRate(double rate)
   {
     nsPerTick = 1000000000D/rate;
-  }  
+  }
 
   @Override
   public void run()
@@ -189,7 +200,7 @@ public class Device implements Runnable {
       while(delta >= 1)
       {
         delta -= 1;
-        attdevice.tick();
+        attdevice.loop();
       }
       try{ Thread.sleep(2); }
       catch(InterruptedException e) { e.printStackTrace(); }

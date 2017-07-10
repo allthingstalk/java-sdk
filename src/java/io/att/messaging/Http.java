@@ -9,13 +9,33 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import io.att.util.Sensor;
 import io.att.util.Device;
+
+/*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
+ *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
+ *  / _ \| | | | | | ' \| | ' \/ _` (_-< | |/ _` | | / / \__ \ |) | ' <
+ * /_/ \_\_|_| |_| |_||_|_|_||_\__, /__/ |_|\__,_|_|_\_\ |___/___/|_|\_\
+ *                             |___/
+ *
+ * Copyright 2017 AllThingsTalk
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 public class Http {
 
-  //private static final String baseUrl = "https://api.allthingstalk.io/";
-  //private static final String baseUrl = "https://tasty.allthingstalk.io/";
-  private static final String baseUrl = "https://spicy.allthingstalk.io/";
+  private String baseUrl = "https://api.allthingstalk.io/";
 
   private String clientId, clientKey, deviceId;
   private String token;
@@ -24,15 +44,31 @@ public class Http {
   {
     this.deviceId  = device.getDeviceId();
     this.token     = device.getToken();
+    
+    if(device.getEndpoint() != null && !device.getEndpoint().isEmpty())
+      this.baseUrl   = String.format("https://%s/", device.getEndpoint());
   }
   
  /****
-  * add asset to the device
-  * @param name
-  * @param title
-  * @param description
-  * @param type (sensor, actuator, virtual, config)
-  * @param profile
+  * add sensor to the device
+  * @param name unique idenfitier on device level
+  * @param title the display title
+  * @param description a short description of your asset
+  * @param data proconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING`, `BOOLEAN` and `GPS`
+  * @return
+  */
+ public String addSensor(String name, String title, String description, Sensor data)
+ {
+   return addAsset(name, title, description, data.getType(), data.getProfile());
+ }
+ 
+ /****
+  * Instead of using the preconfigured data types, you can also set the data type of your sensor manually.
+  * @param name unique idenfitier on device level
+  * @param title the display title
+  * @param description a short description of your asset
+  * @param type possible types are `sensor`, `actuator`, `virtual`, `config`
+  * @param profile data type. Simple types are `integer`, `number`, `boolean` and `string`. Complex json is also allowed; for example `\"number\": {\"type\": \"integer\"}, \"message\": {\"type\": \"string\"}`
   * @return
   */
  public String addAsset(String name, String title, String description, String type, String profile)
@@ -58,8 +94,13 @@ public class Http {
      sb.append(String.format("\"title\":\"%s\",",       title));
      sb.append(String.format("\"description\":\"%s\",", description));
      sb.append(String.format("\"is\":\"%s\",",          type));
-     if(profile.indexOf(",") < 0)
+     // primitive profile
+     if(profile.equals("string") ||
+         profile.equals("boolean") ||
+         profile.equals("number") ||
+         profile.equals("integer"))
        sb.append(String.format("\"profile\":{\"type\": \"%s\"}", profile));
+     // complex json profile
      else
      {
        sb.append("\"profile\":{\"type\": \"object\",");

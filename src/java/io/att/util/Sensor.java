@@ -1,4 +1,4 @@
-package io.att.messaging;
+package io.att.util;
 
 /*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
  *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
@@ -21,15 +21,24 @@ package io.att.messaging;
  * limitations under the License.
  */
 
-public class Broker {
-
-  public  static String  broker   = "api.allthingstalk.io";
-  private static boolean ssl      = true;
-  public  static int     port     = ssl==true ? 8883 : 1883;
-  private static String  protocol = ssl==true ? "ssl://" : "tcp://";
+public enum Sensor {
   
-  public static String getUrl()
+  INTEGER("integer"),
+  NUMBER("number"),
+  STRING("string"),
+  BOOLEAN("boolean"),
+  GPS("\"latitude\":{\"type\":\"number\"}, \"longitude\":{\"type\":\"number\"}, \"altitude\":{\"type\":\"number\"}}");
+  
+  private String type;
+  private String profile;
+
+  private Sensor(String profile)
   {
-    return protocol + broker + ":" + port;
+    this.type = "sensor";
+    this.profile = profile;
   }
+  
+  public String getType() { return type; }
+  public String getProfile() { return profile; }
+  
 }

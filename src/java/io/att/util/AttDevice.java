@@ -1,5 +1,26 @@
 package io.att.util;
 
+/*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
+ *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
+ *  / _ \| | | | | | ' \| | ' \/ _` (_-< | |/ _` | | / / \__ \ |) | ' <
+ * /_/ \_\_|_| |_| |_||_|_|_||_\__, /__/ |_|\__,_|_|_\_\ |___/___/|_|\_\
+ *                             |___/
+ *
+ * Copyright 2017 AllThingsTalk
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 public interface AttDevice {
   
   /**%
@@ -29,7 +50,7 @@ public interface AttDevice {
   /**
    * The main loop of the program. Depending on the rate set for the device, this method is called every x milliseconds. Use this method to read your sensors and send their values to the cloud on a regular basis.
    */
-  public void tick();
+  public void loop();
   
   /**
    * This callback function is automatically called when new data arrives for one of the actuators of the device. This method should handle and process all inbound data.

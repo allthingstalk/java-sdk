@@ -1,6 +1,11 @@
-import io.att.util.Sensor;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+
 import io.att.util.AttDevice;
 import io.att.util.Device;
+import io.att.util.Sensor;
 
 /*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
  *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
@@ -23,7 +28,16 @@ import io.att.util.Device;
  * limitations under the License.
  */
 
-public class BasicExample implements AttDevice {
+/*
+ * This example show how to actuate a LED connected to a Raspberry Pi on your device from AllThingsTalk
+ * 
+ * Note:
+ * To communicate with the GPIO pins on your Rapsberry Pi, we need a few external jars
+ * - pi4j-core.jar
+ * - pi4j-gpio-extensions.jar 
+ */
+
+public class BlinkingLedRaspberryPi implements AttDevice {
   
   // device credentials
   private static final String deviceId  = "";
@@ -31,22 +45,28 @@ public class BasicExample implements AttDevice {
   private static final String endpoint  = "";  // provide http/mqtt endpoint. Leave blank if using the default
   
   static Device device;
+  static final GpioController gpio = GpioFactory.getInstance();
+  
+  // sensor pin setup
+  GpioPinDigitalOutput ledPin;
  
   // variables
   static boolean ledValue;
-  static int count = 0;
 
   public void setup()
   {
     // Initialize the device
     device = new Device(this, deviceId, token, endpoint);
 
-    // Set up Http and create assets
+    // Set up Http and create asset
     device.setupHttp();
-    device.getHttp().addSensor("Counter", "Counter", "Tick counter", Sensor.INTEGER);
+    device.getHttp().addSensor("LED", "Blinky", "Blinking LED", Sensor.BOOLEAN);
     
-    // Set (initial) asset states through http
-    device.setAssetState("Counter", 10);
+    // Set (initial) asset state through http
+    device.setAssetState("LED", false);
+    
+    // Initialize gpio pins
+    ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
     
     try{Thread.sleep(1000);}catch(Exception e){}
     
@@ -60,13 +80,21 @@ public class BasicExample implements AttDevice {
 
   public void loop()
   {
-    count++;
-    device.publish("Counter", count);
+    // do something with your device sensors here
   }
   
   public void callback(String asset, String value)
   {
-    // do something with incoming data here
+    if(asset.equals("LED"))
+    {
+      ledValue = Boolean.parseBoolean(value);
+      if(ledValue == true)
+        ledPin.high();  // turn on the LED
+      else
+        ledPin.low();   // turn off the LED
+    }
+    
+    System.out.println(ledValue);
   }
   
   //
