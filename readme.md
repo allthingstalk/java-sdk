@@ -30,4 +30,8 @@ Java 1.8 installed on your Raspberry Pi.
 #### GPIO pin layout and setup
 
 Please check [the pi4j documentation](http://pi4j.com/example/control.html).
+Add the following _jars_ to your project
+* `pi4j-core.jar`
+* `pi4j-gpio-extension.jar
+`
 You can download the _pi4j_ library [here](http://pi4j.com/download.html).
