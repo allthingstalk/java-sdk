@@ -3,7 +3,7 @@ Java SDK
 
 ### Installation
 
-Download the repository and add the `ATT_IoT_sdk.jar` file to your projects build path.
+Download the repository and add the `ATT_IoT.jar` file to your projects build path.
 
 ### Examples
 
@@ -29,5 +29,5 @@ Java 1.8 installed on your Raspberry Pi.
 
 #### GPIO pin layout and setup
 
-Please check [the pi4j documentation](http://pi4j.com/example/control.html)
-You can download the _pi4j_ library [here](http://pi4j.com/download.html)
+Please check [the pi4j documentation](http://pi4j.com/example/control.html).
+You can download the _pi4j_ library [here](http://pi4j.com/download.html).
