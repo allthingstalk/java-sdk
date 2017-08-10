@@ -35,19 +35,26 @@ import io.att.util.Device;
 
 public class Http {
 
-  private String baseUrl = "https://api.allthingstalk.io/";
-
-  private String clientId, clientKey, deviceId;
+  public static String endpoint = "https://api.allthingstalk.io/";
+  
+  private String deviceId;
   private String token;
 
   public Http(Device device)
   {
     this.deviceId  = device.getDeviceId();
     this.token     = device.getToken();
-    
-    if(device.getEndpoint() != null && !device.getEndpoint().isEmpty())
-      this.baseUrl   = String.format("https://%s/", device.getEndpoint());
   }
+  
+  public Http(Device device, String url)
+  {
+    this.deviceId  = device.getDeviceId();
+    this.token     = device.getToken();
+    
+    if(url != null && !url.isEmpty())
+      endpoint = "https://" + url + "/";
+  }
+
   
  /****
   * add sensor to the device
@@ -57,7 +64,7 @@ public class Http {
   * @param data proconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING`, `BOOLEAN` and `GPS`
   * @return
   */
- public String addSensor(String name, String title, String description, Sensor data)
+ public String addAsset(String name, String title, String description, Sensor data)
  {
    return addAsset(name, title, description, data.getType(), data.getProfile());
  }
@@ -77,7 +84,7 @@ public class Http {
 
    try
    {
-     String url = baseUrl + "device/" + deviceId + "/assets";
+     String url = endpoint + "device/" + deviceId + "/assets";
      URL obj = new URL(url);
      HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
@@ -159,7 +166,7 @@ public class Http {
 
     try
     {
-      String url = baseUrl + "device/" + deviceId + "/asset/" + name + "/state";
+      String url = endpoint + "device/" + deviceId + "/asset/" + name + "/state";
       URL obj = new URL(url);
       HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
@@ -227,15 +234,14 @@ public class Http {
     
     try
     {
-      String url = baseUrl + "device/" + deviceId + "/asset/" + assetName + "/state";
+      String url = endpoint + "device/" + deviceId + "/asset/" + assetName + "/state";
       URL obj = new URL(url);
       HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
       // Add request header
       con.setRequestMethod("GET");
       con.setRequestProperty("Content-Type", "application/json");
-      con.setRequestProperty("Auth-ClientKey", clientKey);
-      con.setRequestProperty("Auth-ClientId", clientId);
+      con.setRequestProperty("Authorization", "Bearer " + token);
       
       int responseCode = con.getResponseCode();
       System.out.println("Sending 'GET' request to URL : " + url);

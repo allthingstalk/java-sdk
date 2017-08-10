@@ -21,20 +21,19 @@ package io.att.util;
  * limitations under the License.
  */
 
-public enum Sensor {
+public enum Actuator {
   
   INTEGER("integer"),
   NUMBER("number"),
   STRING("string"),
-  BOOLEAN("boolean"),
-  GPS("\"latitude\":{\"type\":\"number\"}, \"longitude\":{\"type\":\"number\"}, \"altitude\":{\"type\":\"number\"}}");
+  BOOLEAN("boolean");
   
   private String type;
   private String profile;
 
-  private Sensor(String profile)
+  private Actuator(String profile)
   {
-    this.type = "sensor";
+    this.type = "actuator";
     this.profile = profile;
   }
   

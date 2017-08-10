@@ -1,4 +1,4 @@
-import io.att.util.Sensor;
+import io.att.util.Actuator;
 import io.att.util.AttDevice;
 import io.att.util.Device;
 
@@ -23,55 +23,50 @@ import io.att.util.Device;
  * limitations under the License.
  */
 
-public class BasicExample implements AttDevice {
+public class Actuation implements AttDevice {
   
   // device credentials
   private static final String deviceId  = "";
   private static final String token     = "";
-  private static final String endpoint  = "";  // provide http/mqtt endpoint. Leave blank if using the default
-  
+
   static Device device;
  
   // variables
   static boolean ledValue;
-  static int count = 0;
 
   public void setup()
   {
     // Initialize the device
-    device = new Device(this, deviceId, token, endpoint);
+    device = new Device(this, deviceId, token);
 
-    // Set up Http and create assets
-    device.setupHttp();
-    device.getHttp().addSensor("Counter", "Counter", "Tick counter", Sensor.INTEGER);
-    
-    // Set (initial) asset states through http
-    device.setAssetState("Counter", 10);
-    
-    try{Thread.sleep(1000);}catch(Exception e){}
-    
-    // Subscribe to mqtt
-    device.setupMqtt();
-    device.setRate(1);  // set loop at x ticks per second (tick method is called at this rate)
-    
+    // Add asset (and optionally set an initial value)
+    device.addAsset("Led", "Led", "Light emitting diode", Actuator.BOOLEAN);
+    device.setAssetState("Led", false);
+  
     // Initializing done. Start looping
-    device.start();
+    device.start(3);  // one loop every 3 seconds
   }
 
   public void loop()
   {
-    count++;
-    device.publish("Counter", count);
+    // do something with outgoing data here
   }
   
   public void callback(String asset, String value)
   {
-    // do something with incoming data here
+    if(asset.equals("Led"))
+    {
+      ledValue = Boolean.parseBoolean(value);
+      if(ledValue == true)
+        System.out.println("Led is ON");
+      else
+        System.out.println("Led is OFF");
+    }
   }
   
   //
   public static void main(String[] args)
   {
-    new BasicExample().setup();
+    new Actuation().setup();
   }  
 }

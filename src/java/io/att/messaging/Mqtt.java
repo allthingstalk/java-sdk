@@ -128,8 +128,9 @@ public class Mqtt implements MqttCallback {
     }
   }
   
-  /****
-   * subscribe to all state and command asset topics for this device
+  /**
+   * Subscribe to all state and command asset topics for this device.
+   * 
    * @param topicNames
    * @throws MqttException
    */
@@ -148,8 +149,8 @@ public class Mqtt implements MqttCallback {
     client.subscribe(topic);
   }
 
-  /****
-   * connect/disconnect
+  /**
+   * Connect/disconnect
    */  
   public void connect()
   {
@@ -178,8 +179,8 @@ public class Mqtt implements MqttCallback {
 
 
   @Override
-  /****
-   * try reconnecting to the broker when connection is lost every second
+  /**
+   * Try reconnecting to the broker when connection is lost every second.
    */
   public void connectionLost(Throwable cause)
   {
@@ -208,8 +209,13 @@ public class Mqtt implements MqttCallback {
   }
   
   @Override
-  /****
-   * determine whether incoming message is a config update or datapoint
+  /**
+   * Callback for incoming data over mqtt.
+   * The value is sent back to the asset in AllThingsTalk to acknowledge we received it.
+   * 
+   * @param topic
+   * @param message
+   * @throws InterruptedException
    */
   public void messageArrived(String topic, MqttMessage message) throws InterruptedException
   {

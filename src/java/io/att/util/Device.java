@@ -33,7 +33,6 @@ public class Device implements Runnable {
 
   private String deviceId;
   private String token;
-  private String endpoint;
   
   private String subTopic;
   private String pubTopic;
@@ -47,58 +46,91 @@ public class Device implements Runnable {
   /**
    * Constructor for our device, containing all needed credentials.
    * 
-   * @param <type>deviceId</type> the id of your device from AllThingsTalk
-   * @param <type>token</type> the authentication token of your device
-   * @param <type>attdevice</type> the interface your main program implements. See [AttDevice.java](#attdevicejava) for more info
-   * @param <type>endpoint</type> the messaging endpoint for mqtt and http. By default _api.allthingstalk.io_ is used
+   * @param deviceId the id of your device from AllThingsTalk
+   * @param token the authentication token of your device
+   * @param attdevice the interface your main program implements. See [AttDevice.java](#attdevicejava) for more info
    */
-  public Device(AttDevice attdevice, String deviceId, String token, String endpoint)
+  public Device(AttDevice attdevice, String deviceId, String token)
   {
     this.attdevice = attdevice;
-    setRate(1);  // default 1 ticks per second
     
     this.deviceId = deviceId;
     this.token    = token;
-    this.endpoint = endpoint;
-    if(endpoint != null && !endpoint.isEmpty())
-      Broker.broker = endpoint;
     
     this.subTopic = String.format("device/%s/asset/+/command", deviceId);  // listen for command
     this.pubTopic = String.format("device/%s/asset/", deviceId);
-  }
-  
-  public Device(AttDevice attdevice, String deviceId, String token)
-  {
-    this(attdevice, deviceId, token, null);
-  }
-
-  /**
-   * Creates a Http instance with the credentials of the device for our API calls.
-   */
-  public void setupHttp()
-  {
-    http = new Http(this);
+    
+    this.http = new Http(this);
+    try{Thread.sleep(300);}catch(Exception e){}
+    this.mqtt = new Mqtt(this);
   }
   
   /**
-   * Opens a connection to the broker and subscribes to all actuator topics for this device.
+   * Constructor for our device, containing all needed credentials.
+   * 
+   * @param deviceId the id of your device from AllThingsTalk
+   * @param token the authentication token of your device
+   * @param attdevice the interface your main program implements. See [AttDevice.java](#attdevicejava) for more info
+   * @param url the REST API endpoint for http. By default set to _api.allthingstalk.io_
+   * @param broker mqtt broker used. By default set to _api.allthingstalk.io_
    */
-  public void setupMqtt()
+  public Device(AttDevice attdevice, String deviceId, String token, String url, String broker)
   {
-    mqtt = new Mqtt(this);  // connect to mqtt and subscribe to the assets of this device
+    this.attdevice = attdevice;
+    
+    this.deviceId = deviceId;
+    this.token    = token;
+    
+    this.subTopic = String.format("device/%s/asset/+/command", deviceId);  // listen for command
+    this.pubTopic = String.format("device/%s/asset/", deviceId);
+    
+    this.http = new Http(this, url);  // set custom api endpoint
+    try{Thread.sleep(300);}catch(Exception e){}
+    
+    if(broker != null && !broker.isEmpty())  // set custom broker
+      Broker.broker = broker;
+    this.mqtt = new Mqtt(this);
   }
   
   public Http getHttp() { return http; }
   
-  /**
-   * Add an asset to your device in AllThingsTalk.
+  /****
+   * Add a sensor asset to your device with preset primitive data type.
    * 
-   * @param <type>name</type> the unique identifier on device level
-   * @param <type>title</type> the display title
-   * @param <type>description</type> a short description of your asset
-   * @param <type>type</type> possible types are `sensor`, `actuator`, `config`, `virtual`
-   * @param <type>profile</type> datatype of this asset. Simple types are `integer`, `number`, `boolean` and `string`. Complex json is also allowed; for example `\"number\": {\"type\": \"integer\"}, \"message\": {\"type\": \"string\"}`
-   * @return <type>status 200</type> json containing all details of this asset, including the asset id. For more information, check [the REST API section](/developers/api/)
+   * @param name unique idenfitier on device level
+   * @param title the display title
+   * @param description a short description of your asset
+   * @param data preconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING`, `BOOLEAN` and `GPS`
+   * @return
+   */
+  public String addAsset(String name, String title, String description, Sensor data)
+  {
+    return http.addAsset(name, title, description, data.getType(), data.getProfile());
+  }
+  
+  /****
+   * Add an actuator asset to your device with preset primitive data type.
+   * 
+   * @param name unique idenfitier on device level
+   * @param title the display title
+   * @param description a short description of your asset
+   * @param data preconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING` and `BOOLEAN`
+   * @return
+   */
+  public String addAsset(String name, String title, String description, Actuator data)
+  {
+    return http.addAsset(name, title, description, data.getType(), data.getProfile());
+  }
+  
+  /****
+   * Add an asset to your device.
+   * 
+   * @param name unique idenfitier on device level
+   * @param title the display title
+   * @param description a short description of your asset
+   * @param type possible types are `sensor`, `actuator`, `virtual`, `config`
+   * @param profile data type. Simple types are `integer`, `number`, `boolean` and `string`. Complex json is also allowed; for example `\"number\": {\"type\": \"integer\"}, \"message\": {\"type\": \"string\"}`
+   * @return
    */
   public String addAsset(String name, String title, String description, String type, String profile)
   {
@@ -106,10 +138,10 @@ public class Device implements Runnable {
   }
   
   /**
-   * Set the value of your asset through Htpp. Useful for setting initial values before starting Mqtt and the main program loop
+   * Set the value of your asset through Htpp. Useful for setting initial values before starting Mqtt and the main program loop.
    * 
-   * @param <type>asset</type> name of the asset
-   * @param <type>value</type> value for this asset. Allowed primitives are `boolean`, `float`, `int`, `double` and `String`
+   * @param asset name of the asset
+   * @param value value for this asset. Allowed primitives are `boolean`, `float`, `int`, `double` and `String`
    */  
   public String setAssetState(String asset, boolean value)
   {
@@ -123,8 +155,8 @@ public class Device implements Runnable {
   /**
    * Similar to `setAssetState` but used for complex data types containing multiple json fields.
    * 
-   * @param <type>asset</type> name of the asset
-   * @param <type>value</type> json String; for example `\"number\":35,\"message\":\"hello world\"`
+   * @param asset name of the asset
+   * @param value json String; for example `\"number\":35,\"message\":\"hello world\"`
    */
   public String setComplexAssetState(String asset, String value)
   {
@@ -132,10 +164,10 @@ public class Device implements Runnable {
   }
   
   /**
-   * Publish an asset value over Mqtt
+   * Publish an asset value over Mqtt.
    * 
-   * @param <type>asset</type> name of the asset
-   * @param <type>value</type> value for this asset. Allowed primitives are `boolean`, `float`, `int`, `double` and `String`
+   * @param asset name of the asset
+   * @param value value for this asset. Allowed primitives are `boolean`, `float`, `int`, `double` and `String`
    */
   public void publish(String asset, boolean value)
   {
@@ -147,12 +179,24 @@ public class Device implements Runnable {
   public void publish(String asset, String  value) { mqtt.publish(asset, value);    }
   
   /**
-   * Start the main loop of our program. The [tick()](#tick) method will be called at a fixed rate, which you can set using [setRate()](#setrate).
+   * Start the main loop at a given rate.
+   * The [tick()](#tick) method will be called at this rate (sec per tick).
+   * You can also set the rate using [setRate()](#setrate).
    */
-  public void start()
+  public void start(int rate)
   {
+    setRate(rate);
     running = true;
     new Thread(this).start();
+    System.out.println("Loop started");
+  }
+  
+  /**
+   * Start the main loop with a default rate of one second per tick.
+   */  
+  public void start()
+  {
+    start(1);
   }
   
   /**
@@ -171,18 +215,16 @@ public class Device implements Runnable {
   
   public AttDevice getAttDevice() { return attdevice; }
   
-  public String getEndpoint() { return endpoint; }
-  
   private double nsPerTick;
   
   /**
-   * Set the rate of our main loop in FPS
+   * Set the rate of our main loop in Seconds per Tick
    * 
-   * @param <type>rate</type> in Frames Per Second
+   * @param rate in Frames Per Second
    */
   public void setRate(double rate)
   {
-    nsPerTick = 1000000000D/rate;
+    nsPerTick = 1000000000D*rate;
   }
 
   @Override
