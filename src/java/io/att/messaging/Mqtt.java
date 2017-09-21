@@ -68,8 +68,6 @@ public class Mqtt implements MqttCallback {
       this.conOpt = new MqttConnectOptions();
       this.conOpt.setCleanSession(true);
       
-      //String code     = device.getClientKey();
-      //String username = device.getClientId() + ":" + device.getClientId();
       String code = "";
       String username = device.getToken();
 
@@ -100,16 +98,30 @@ public class Mqtt implements MqttCallback {
   }
   
   /****
-   * publish asset to topic
+   * Publish data to an asset on the device
+   * @param asset
    * @param data
    */
   public void publish(String asset, String data)
   {
-    String topic = baseTopic + asset + "/state";
+    String topic = baseTopic + "asset/" + asset + "/state";
     data = "{\"Value\":\"" + data + "\"}";
     
     System.out.println("Publish to: " + topic);
     System.out.println("Data      : " + data);
+    publishAMessage(topic, data);
+  }
+  
+  /****
+   * Publish a binary payload to the device
+   * @param data
+   */
+  public void publishBinary(String data)
+  {
+    String topic = baseTopic + "state";
+    //data = "{\"Value\":\"" + data + "\"}";
+    
+    System.out.println("Publish binary payload to: " + topic);
     publishAMessage(topic, data);
   }
   

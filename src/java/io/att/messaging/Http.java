@@ -141,7 +141,7 @@ public class Http {
      }
      in.close();
    }
-   catch (IOException e){ e.printStackTrace(); }
+   catch (IOException e){ System.out.println("!! Error creating asset"); }
    
    if(response.length() > 0)
      return response.toString();

@@ -3,6 +3,7 @@ package io.att.util;
 import io.att.messaging.Broker;
 import io.att.messaging.Http;
 import io.att.messaging.Mqtt;
+import io.att.messaging.PayloadBuilder;
 
 /*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
  *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
@@ -41,6 +42,8 @@ public class Device implements Runnable {
   private Mqtt mqtt;
   private AttDevice attdevice;
   
+  public PayloadBuilder payload;
+  
   private boolean running;
   
   /**
@@ -58,11 +61,13 @@ public class Device implements Runnable {
     this.token    = token;
     
     this.subTopic = String.format("device/%s/asset/+/command", deviceId);  // listen for command
-    this.pubTopic = String.format("device/%s/asset/", deviceId);
+    this.pubTopic = String.format("device/%s/", deviceId);
     
     this.http = new Http(this);
     try{Thread.sleep(300);}catch(Exception e){}
     this.mqtt = new Mqtt(this);
+    
+    this.payload = new PayloadBuilder(this.mqtt);
   }
   
   /**
@@ -82,7 +87,7 @@ public class Device implements Runnable {
     this.token    = token;
     
     this.subTopic = String.format("device/%s/asset/+/command", deviceId);  // listen for command
-    this.pubTopic = String.format("device/%s/asset/", deviceId);
+    this.pubTopic = String.format("device/%s/", deviceId);
     
     this.http = new Http(this, url);  // set custom api endpoint
     try{Thread.sleep(300);}catch(Exception e){}
@@ -90,6 +95,8 @@ public class Device implements Runnable {
     if(broker != null && !broker.isEmpty())  // set custom broker
       Broker.broker = broker;
     this.mqtt = new Mqtt(this);
+    
+    this.payload = new PayloadBuilder(this.mqtt);
   }
   
   public Http getHttp() { return http; }

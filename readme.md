@@ -7,9 +7,10 @@ Download the repository and add the `ATT_IoT.jar` file to your projects build pa
 
 ### Examples
 
-Two basic examples are found in the `/src/examples` folder.
+Several basic examples are found in the `/src/examples` folder.
 * `counter.java` send data from your application to AllThingsTalk _(sensing)_
 * `actuation.java` toggle a boolean from AllThingsTalk _(actuation)_
+* `BinaryExample.java` send data of multiple assets together in one binary payload. The corresponding .json file for decoding the payload in AllThingsTalk can be found in the same folder.
 
 ---
 
