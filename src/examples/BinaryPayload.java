@@ -25,7 +25,7 @@ import io.att.util.Sensor;
  * limitations under the License.
  */
 
-public class BinaryExample implements AttDevice {
+public class BinaryPayload implements AttDevice {
   
   // device credentials
   private static final String deviceId  = "";
@@ -55,6 +55,7 @@ public class BinaryExample implements AttDevice {
 
   public void loop()
   {
+    // Updates values to send
     count++;
     float random = 1 + r.nextFloat() * (100 - 1);  // Random float between 1 and 100
     boolean odd = count%2==1?true:false;  // True when count is odd, false when count is even
@@ -80,6 +81,6 @@ public class BinaryExample implements AttDevice {
   //
   public static void main(String[] args)
   {
-    new BinaryExample().setup();
+    new BinaryPayload().setup();
   }  
 }
