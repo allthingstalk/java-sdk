@@ -1,5 +1,7 @@
 package io.att.util;
 
+import org.json.JSONObject;
+
 import io.att.messaging.Broker;
 import io.att.messaging.Http;
 import io.att.messaging.Mqtt;
@@ -184,6 +186,7 @@ public class Device implements Runnable {
   public void publish(String asset, int     value) { mqtt.publish(asset, ""+value); }
   public void publish(String asset, double  value) { mqtt.publish(asset, ""+value); }
   public void publish(String asset, String  value) { mqtt.publish(asset, value);    }
+  public void publish(String asset, JSONObject value) { mqtt.publish(asset, value.toString());    }  // Complex assets
   
   /**
    * Start the main loop at a given rate.

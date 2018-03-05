@@ -104,9 +104,13 @@ public class Mqtt implements MqttCallback {
    */
   public void publish(String asset, String data)
   {
-    String topic = baseTopic + "asset/" + asset + "/state";
-    data = "{\"Value\":\"" + data + "\"}";
+    if(data.startsWith("{") && data.endsWith("}"))
+      data = "{\"Value\":" + data + "}";
+    else
+      data = "{\"Value\":\"" + data + "\"}";
     
+    String topic = baseTopic + "asset/" + asset + "/state";
+   
     System.out.println("Publish to: " + topic);
     System.out.println("Data      : " + data);
     publishAMessage(topic, data);

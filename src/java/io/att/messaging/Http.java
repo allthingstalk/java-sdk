@@ -262,6 +262,6 @@ public class Http {
     if(response.length() > 0)
       return response.toString();
     
-    return null; 
+    return null;
   }
 }

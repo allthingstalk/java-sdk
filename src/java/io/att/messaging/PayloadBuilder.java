@@ -2,6 +2,7 @@ package io.att.messaging;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,38 @@ public class PayloadBuilder {
     }
    
     mqtt.publishBinary(new String(bytes));
+  }
+  
+  /****
+   * Add a single byte to our binary payload
+   * 
+   * @param b
+   * @return
+   */
+  public int addByte(String b)
+  {
+    try
+    {
+      byte bt = (byte) (Integer.parseInt(b,16) & 0xff);  // Parse byte from string ("00" to "FF");
+      payload.add(bt);
+      length += 1;
+      return 1;
+    }
+    catch(Exception pe)
+    {
+      System.out.println("Could not parse byte value");
+    }
+    return -1;
+  }
+  
+  public void addBytes(String bytes)
+  {
+    bytes = bytes.replace(" ", "");  // Get rid of spaces
+    for(int i=0; i<bytes.length(); i+=2)
+    {
+      String str = bytes.substring(i,i+2);
+      addByte(str);
+    }
   }
   
   /****

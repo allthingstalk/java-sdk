@@ -26,3 +26,4 @@ local.properties
 setup.bat
 setup.sh
 temp.txt
+src/examples/BinaryBasic.java
