@@ -40,7 +40,7 @@ public class Actuation implements AttDevice {
     device = new Device(this, deviceId, token);
 
     // Add asset (and optionally set an initial value)
-    device.addAsset("Led", "Led", "Light emitting diode", Actuator.BOOLEAN);
+    device.addAsset("Led", "Led", Actuator.BOOLEAN);
     device.setAssetState("Led", false);
   
     // Initializing done. Start looping

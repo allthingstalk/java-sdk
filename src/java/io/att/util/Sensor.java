@@ -23,11 +23,13 @@ package io.att.util;
 
 public enum Sensor {
   
-  INTEGER("integer"),
-  NUMBER("number"),
-  STRING("string"),
-  BOOLEAN("boolean"),
-  GPS("\"latitude\":{\"type\":\"number\"}, \"longitude\":{\"type\":\"number\"}, \"altitude\":{\"type\":\"number\"}}");
+  INTEGER("\"integer\""),
+  NUMBER("\"number\""),
+  STRING("\"string\""),
+  BOOLEAN("\"boolean\""),
+  LOCATION("\"object\",\"properties\":{\"latitude\":{\"type\":\"number\"}, \"longitude\":{\"type\":\"number\"}, \"altitude\":{\"type\":\"number\"}}}"),
+  POSITION("\"object\",\"properties\":{\"x\":{\"type\":\"number\"}, \"y\":{\"type\":\"number\"}, \"z\":{\"type\":\"number\"}}}"),
+  COLOR("\"object\",\"properties\":{\"r\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255},\"g\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255},\"b\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255}}}");
   
   private String type;
   private String profile;

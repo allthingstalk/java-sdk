@@ -44,10 +44,10 @@ public class BinaryPayload implements AttDevice {
     device = new Device(this, deviceId, token);
 
     // Add assets (and optionally set an initial value)
-    device.addAsset("integer", "Integer", "Binary test", Sensor.INTEGER);
-    device.addAsset("number",  "Number",  "Binary test", Sensor.NUMBER);
-    device.addAsset("boolean", "Boolean", "Binary test", Sensor.BOOLEAN);
-    device.addAsset("string",  "String",  "Binary test", Sensor.STRING);
+    device.addAsset("integer", "Integer", Sensor.INTEGER);
+    device.addAsset("number",  "Number",  Sensor.NUMBER);
+    device.addAsset("boolean", "Boolean", Sensor.BOOLEAN);
+    device.addAsset("string",  "String",  Sensor.STRING);
   
     // Initializing done. Start looping
     device.start(3);  // one loop every 3 seconds

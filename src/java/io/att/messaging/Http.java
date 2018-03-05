@@ -64,21 +64,39 @@ public class Http {
   * @param data proconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING`, `BOOLEAN` and `GPS`
   * @return
   */
- public String addAsset(String name, String title, String description, Sensor data)
+ public String addAsset(String name, String title, Sensor datatype)
  {
-   return addAsset(name, title, description, data.getType(), data.getProfile());
+   return addAsset(name, title, datatype.getType(), datatype.getProfile());
+ }
+ 
+ // x, y, z
+ // position, orientation, accelerometer
+ public String addPosition(String name, String title)
+ {
+   return addAsset(name, title, Sensor.POSITION);
+ }
+ 
+ // r, g, b
+ public String addColor(String name, String title)
+ {
+   return addAsset(name, title, Sensor.COLOR);
+ }
+ 
+ // latitude, longitude, altitude
+ public String addLocation(String name, String title)
+ {
+   return addAsset(name, title, Sensor.LOCATION);
  }
  
  /****
   * Instead of using the preconfigured data types, you can also set the data type of your sensor manually.
   * @param name unique idenfitier on device level
   * @param title the display title
-  * @param description a short description of your asset
-  * @param type possible types are `sensor`, `actuator`, `virtual`, `config`
+  * @param type possible types are `sensor`, `actuator`, `virtual`
   * @param profile data type. Simple types are `integer`, `number`, `boolean` and `string`. Complex json is also allowed; for example `\"number\": {\"type\": \"integer\"}, \"message\": {\"type\": \"string\"}`
   * @return
   */
- public String addAsset(String name, String title, String description, String type, String profile)
+ public String addAsset(String name, String title, String sensortype, String profile)
  {
    StringBuffer response = new StringBuffer();
 
@@ -97,27 +115,10 @@ public class Http {
      StringBuffer sb = new StringBuffer();
      
      sb.append("{");
-     sb.append(String.format("\"name\":\"%s\",",        name));
-     sb.append(String.format("\"title\":\"%s\",",       title));
-     sb.append(String.format("\"description\":\"%s\",", description));
-     sb.append(String.format("\"is\":\"%s\",",          type));
-     // primitive profile
-     if(profile.equals("string") ||
-         profile.equals("boolean") ||
-         profile.equals("number") ||
-         profile.equals("integer"))
-       sb.append(String.format("\"profile\":{\"type\": \"%s\"}", profile));
-     // complex json profile
-     else
-     {
-       sb.append("\"profile\":{\"type\": \"object\",");
-       sb.append("\"properties\":{");
-       sb.append(profile);
-       sb.append("}");
-       sb.append("}");
-     }
-     
-     sb.append("}");
+     sb.append(String.format("\"name\":\"%s\",",  name));
+     sb.append(String.format("\"title\":\"%s\",", title));
+     sb.append(String.format("\"is\":\"%s\",",    sensortype));
+     sb.append(String.format("\"profile\":{\"type\": %s}", profile));  // profile
      
      String urlParameters = sb.toString();
     

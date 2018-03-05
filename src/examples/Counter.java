@@ -26,8 +26,8 @@ import io.att.util.Device;
 public class Counter implements AttDevice {
   
   // device credentials
-  private static final String deviceId  = "";
-  private static final String token     = "";
+  private static final String deviceId  = "eKfwdMREFN0cRrV0aFuPoJ6z";
+  private static final String token     = "maker:4Nq1axyolPgtm0lqFz6KOatLyvCLn1vnFcdqXHY0";
 
   static Device device;
  
@@ -40,7 +40,7 @@ public class Counter implements AttDevice {
     device = new Device(this, deviceId, token);
 
     // Add asset (and optionally set an initial value)
-    device.addAsset("Counter", "Counter", "Tick counter", Sensor.INTEGER);
+    device.addAsset("Counter", "Counter", Sensor.INTEGER);
     device.setAssetState("Counter", count);
   
     // Initializing done. Start looping

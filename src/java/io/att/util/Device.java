@@ -13,7 +13,7 @@ import io.att.messaging.PayloadBuilder;
  * /_/ \_\_|_| |_| |_||_|_|_||_\__, /__/ |_|\__,_|_|_\_\ |___/___/|_|\_\
  *                             |___/
  *
- * Copyright 2017 AllThingsTalk
+ * Copyright 2018 AllThingsTalk
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,9 +112,24 @@ public class Device implements Runnable {
    * @param data preconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING`, `BOOLEAN` and `GPS`
    * @return
    */
-  public String addAsset(String name, String title, String description, Sensor data)
+  public String addAsset(String name, String title, Sensor data)
   {
-    return http.addAsset(name, title, description, data.getType(), data.getProfile());
+    return http.addAsset(name, title, data.getType(), data.getProfile());
+  }
+  
+  public String addPosition(String name, String title)
+  {
+    return http.addPosition(name, title);
+  }
+  
+  public String addColor(String name, String title)
+  {
+    return http.addColor(name, title);
+  }
+  
+  public String addLocation(String name, String title)
+  {
+    return http.addLocation(name, title);
   }
   
   /****
@@ -126,9 +141,9 @@ public class Device implements Runnable {
    * @param data preconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING` and `BOOLEAN`
    * @return
    */
-  public String addAsset(String name, String title, String description, Actuator data)
+  public String addAsset(String name, String title, Actuator data)
   {
-    return http.addAsset(name, title, description, data.getType(), data.getProfile());
+    return http.addAsset(name, title, data.getType(), data.getProfile());
   }
   
   /****
@@ -141,9 +156,9 @@ public class Device implements Runnable {
    * @param profile data type. Simple types are `integer`, `number`, `boolean` and `string`. Complex json is also allowed; for example `\"number\": {\"type\": \"integer\"}, \"message\": {\"type\": \"string\"}`
    * @return
    */
-  public String addAsset(String name, String title, String description, String type, String profile)
+  public String addAsset(String name, String title, String type, String profile)
   {
-    return http.addAsset(name, title, description, type, profile);
+    return http.addAsset(name, title, type, profile);
   }
   
   /**

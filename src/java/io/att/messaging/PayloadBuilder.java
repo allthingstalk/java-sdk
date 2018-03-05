@@ -2,7 +2,6 @@ package io.att.messaging;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 

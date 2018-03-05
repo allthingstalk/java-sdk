@@ -23,10 +23,10 @@ package io.att.util;
 
 public enum Actuator {
   
-  INTEGER("integer"),
-  NUMBER("number"),
-  STRING("string"),
-  BOOLEAN("boolean");
+  INTEGER("\"integer\""),
+  NUMBER("\"number\""),
+  STRING("\"string\""),
+  BOOLEAN("\"boolean\"");
   
   private String type;
   private String profile;
