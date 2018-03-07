@@ -2,7 +2,6 @@ import java.util.Random;
 
 import io.att.util.AttDevice;
 import io.att.util.Device;
-import io.att.util.Sensor;
 
 /*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
  *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
@@ -44,10 +43,9 @@ public class BinaryPayload implements AttDevice {
     device = new Device(this, deviceId, token);
 
     // Add assets (and optionally set an initial value)
-    device.addAsset("integer", "Integer", Sensor.INTEGER);
-    device.addAsset("number",  "Number",  Sensor.NUMBER);
-    device.addAsset("boolean", "Boolean", Sensor.BOOLEAN);
-    device.addAsset("string",  "String",  Sensor.STRING);
+    device.addInteger("integer", "Integer");
+    device.addNumber( "number",  "Number");
+    device.addBoolean("boolean", "Boolean");
   
     // Initializing done. Start looping
     device.start(3);  // one loop every 3 seconds
@@ -67,7 +65,6 @@ public class BinaryPayload implements AttDevice {
     device.payload.addInteger(count);
     device.payload.addBoolean(odd);
     device.payload.addNumber(random);
-    device.payload.addString("Hey now brown cow!");
     
     // Send the payload
     device.payload.send();

@@ -9,8 +9,9 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import io.att.util.Sensor;
+import io.att.util.Asset;
 import io.att.util.Device;
+import io.att.util.Type;
 
 /*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
  *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
@@ -64,28 +65,9 @@ public class Http {
   * @param data proconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING`, `BOOLEAN` and `GPS`
   * @return
   */
- public String addAsset(String name, String title, Sensor datatype)
+ public String addAsset(String name, String title, Type type, Asset profile)
  {
-   return addAsset(name, title, datatype.getType(), datatype.getProfile());
- }
- 
- // x, y, z
- // position, orientation, accelerometer
- public String addPosition(String name, String title)
- {
-   return addAsset(name, title, Sensor.POSITION);
- }
- 
- // r, g, b
- public String addColor(String name, String title)
- {
-   return addAsset(name, title, Sensor.COLOR);
- }
- 
- // latitude, longitude, altitude
- public String addLocation(String name, String title)
- {
-   return addAsset(name, title, Sensor.LOCATION);
+   return addAsset(name, title, type.name().toLowerCase(), profile.getProfile());
  }
  
  /****
@@ -96,7 +78,7 @@ public class Http {
   * @param profile data type. Simple types are `integer`, `number`, `boolean` and `string`. Complex json is also allowed; for example `\"number\": {\"type\": \"integer\"}, \"message\": {\"type\": \"string\"}`
   * @return
   */
- public String addAsset(String name, String title, String sensortype, String profile)
+ public String addAsset(String name, String title, String type, String profile)
  {
    StringBuffer response = new StringBuffer();
 
@@ -117,7 +99,7 @@ public class Http {
      sb.append("{");
      sb.append(String.format("\"name\":\"%s\",",  name));
      sb.append(String.format("\"title\":\"%s\",", title));
-     sb.append(String.format("\"is\":\"%s\",",    sensortype));
+     sb.append(String.format("\"is\":\"%s\",",    type));
      sb.append(String.format("\"profile\":{\"type\": %s}", profile));  // profile
      
      String urlParameters = sb.toString();

@@ -1,4 +1,3 @@
-import io.att.util.Sensor;
 import io.att.util.AttDevice;
 import io.att.util.Device;
 
@@ -40,7 +39,7 @@ public class Counter implements AttDevice {
     device = new Device(this, deviceId, token);
 
     // Add asset (and optionally set an initial value)
-    device.addAsset("Counter", "Counter", Sensor.INTEGER);
+    device.addInteger("Counter", "Counter");
     device.setAssetState("Counter", count);
   
     // Initializing done. Start looping

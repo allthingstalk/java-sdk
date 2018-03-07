@@ -21,22 +21,22 @@ package io.att.util;
  * limitations under the License.
  */
 
-public enum Actuator {
+public enum Asset {
   
   INTEGER("\"integer\""),
   NUMBER("\"number\""),
   STRING("\"string\""),
-  BOOLEAN("\"boolean\"");
+  BOOLEAN("\"boolean\""),
+  LOCATION("\"object\",\"properties\":{\"latitude\":{\"type\":\"number\"}, \"longitude\":{\"type\":\"number\"}, \"altitude\":{\"type\":\"number\"}}}"),
+  POSITION("\"object\",\"properties\":{\"x\":{\"type\":\"number\"}, \"y\":{\"type\":\"number\"}, \"z\":{\"type\":\"number\"}}}"),
+  COLOR("\"object\",\"properties\":{\"r\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255},\"g\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255},\"b\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255}}}");
   
-  private String type;
   private String profile;
 
-  private Actuator(String profile)
+  private Asset(String profile)
   {
-    this.type = "actuator";
     this.profile = profile;
   }
-  
-  public String getType() { return type; }
+
   public String getProfile() { return profile; }
 }

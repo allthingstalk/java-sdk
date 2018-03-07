@@ -11,10 +11,6 @@
     {
       "asset": "number",
       "value": { "byte": 5, "bytelength": 4, "type": "number"}
-    },
-          {
-      "asset": "string",
-      "value": { "byte": 9, "bytelength": 18, "type": "string"}
     }
   ]
 }

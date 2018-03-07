@@ -103,63 +103,28 @@ public class Device implements Runnable {
   
   public Http getHttp() { return http; }
   
-  /****
-   * Add a sensor asset to your device with preset primitive data type.
-   * 
-   * @param name unique idenfitier on device level
-   * @param title the display title
-   * @param description a short description of your asset
-   * @param data preconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING`, `BOOLEAN` and `GPS`
-   * @return
-   */
-  public String addAsset(String name, String title, Sensor data)
-  {
-    return http.addAsset(name, title, data.getType(), data.getProfile());
-  }
+  // Add generic asset
+  public String addAsset(String name, String title, Type type, Asset data) { return http.addAsset(name, title, type, data); }
+  public String addAsset(String name, String title, Asset data) { return http.addAsset(name, title, Type.SENSOR, data); }
+  public String addAsset(String name, String title, String type, String profile) { return http.addAsset(name, title, type, profile); }
   
-  public String addPosition(String name, String title)
-  {
-    return http.addPosition(name, title);
-  }
-  
-  public String addColor(String name, String title)
-  {
-    return http.addColor(name, title);
-  }
-  
-  public String addLocation(String name, String title)
-  {
-    return http.addLocation(name, title);
-  }
-  
-  /****
-   * Add an actuator asset to your device with preset primitive data type.
-   * 
-   * @param name unique idenfitier on device level
-   * @param title the display title
-   * @param description a short description of your asset
-   * @param data preconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING` and `BOOLEAN`
-   * @return
-   */
-  public String addAsset(String name, String title, Actuator data)
-  {
-    return http.addAsset(name, title, data.getType(), data.getProfile());
-  }
-  
-  /****
-   * Add an asset to your device.
-   * 
-   * @param name unique idenfitier on device level
-   * @param title the display title
-   * @param description a short description of your asset
-   * @param type possible types are `sensor`, `actuator`, `virtual`, `config`
-   * @param profile data type. Simple types are `integer`, `number`, `boolean` and `string`. Complex json is also allowed; for example `\"number\": {\"type\": \"integer\"}, \"message\": {\"type\": \"string\"}`
-   * @return
-   */
-  public String addAsset(String name, String title, String type, String profile)
-  {
-    return http.addAsset(name, title, type, profile);
-  }
+  // Add specific asset of specific type
+  public String addInteger( String name, String title, Type type) { return http.addAsset(name, title, type, Asset.INTEGER); }
+  public String addNumber(  String name, String title, Type type) { return http.addAsset(name, title, type, Asset.NUMBER); }
+  public String addBoolean( String name, String title, Type type) { return http.addAsset(name, title, type, Asset.BOOLEAN); }
+  public String addString(  String name, String title, Type type) { return http.addAsset(name, title, type, Asset.STRING); }
+  public String addPosition(String name, String title, Type type) { return http.addAsset(name, title, type, Asset.POSITION); }
+  public String addColor(   String name, String title, Type type) { return http.addAsset(name, title, type, Asset.COLOR); }
+  public String addLocation(String name, String title, Type type) { return http.addAsset(name, title, type, Asset.LOCATION); }
+
+  // Add specific asset of default type SENSOR
+  public String addInteger( String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.INTEGER); }
+  public String addNumber(  String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.NUMBER); }
+  public String addBoolean( String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.BOOLEAN); }
+  public String addString(  String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.STRING); }
+  public String addPosition(String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.POSITION); }
+  public String addColor(   String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.COLOR); }
+  public String addLocation(String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.LOCATION); }
   
   /**
    * Set the value of your asset through Htpp. Useful for setting initial values before starting Mqtt and the main program loop.

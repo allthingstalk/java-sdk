@@ -1,6 +1,6 @@
-import io.att.util.Actuator;
 import io.att.util.AttDevice;
 import io.att.util.Device;
+import io.att.util.Type;
 
 /*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
  *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
@@ -40,7 +40,7 @@ public class Actuation implements AttDevice {
     device = new Device(this, deviceId, token);
 
     // Add asset (and optionally set an initial value)
-    device.addAsset("Led", "Led", Actuator.BOOLEAN);
+    device.addBoolean("Led", "Led", Type.ACTUATOR);
     device.setAssetState("Led", false);
   
     // Initializing done. Start looping
