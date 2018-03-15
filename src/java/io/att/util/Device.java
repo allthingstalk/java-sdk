@@ -1,5 +1,10 @@
 package io.att.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.json.JSONObject;
 
 import io.att.messaging.Broker;
@@ -48,13 +53,51 @@ public class Device implements Runnable {
   
   private boolean running;
   
-  /**
-   * Constructor for our device, containing all needed credentials.
-   * 
-   * @param deviceId the id of your device from AllThingsTalk
-   * @param token the authentication token of your device
-   * @param attdevice the interface your main program implements. See [AttDevice.java](#attdevicejava) for more info
-   */
+  public Device(AttDevice attdevice)
+  {
+    this.attdevice = attdevice;
+    
+    JSONObject obj = readKeys();
+    
+    this.deviceId = obj.getString("id");
+    this.token    = obj.getString("token");
+    
+    this.subTopic = String.format("device/%s/asset/+/command", deviceId);  // listen for command
+    this.pubTopic = String.format("device/%s/", deviceId);
+    
+    this.http = new Http(this);
+    try{Thread.sleep(300);}catch(Exception e){}
+    this.mqtt = new Mqtt(this);
+    
+    this.payload = new PayloadBuilder(this.mqtt);
+  }
+  
+  private JSONObject readKeys()
+  {
+    File path = new File("keys.json");
+    StringBuffer sb = new StringBuffer();
+    
+    try
+    {
+      FileReader f = new FileReader(path);
+      BufferedReader br = new BufferedReader(f);
+
+      
+      String line = br.readLine();
+
+      while (line != null)
+      {
+        sb.append(line);
+        line = br.readLine();
+      }
+      br.close();
+    }
+    catch(IOException e) { e.printStackTrace(); }
+    
+    return new JSONObject(sb.toString());    
+  }
+  
+  // Constructor including credentials
   public Device(AttDevice attdevice, String deviceId, String token)
   {
     this.attdevice = attdevice;
@@ -104,27 +147,33 @@ public class Device implements Runnable {
   public Http getHttp() { return http; }
   
   // Add generic asset
-  public String addAsset(String name, String title, Type type, Asset data) { return http.addAsset(name, title, type, data); }
-  public String addAsset(String name, String title, Asset data) { return http.addAsset(name, title, Type.SENSOR, data); }
-  public String addAsset(String name, String title, String type, String profile) { return http.addAsset(name, title, type, profile); }
+  public String addAsset(String name, String title, Type type, Asset data)                    { return http.addAsset(name, title, type, data, null); }
+  public String addAsset(String name, String title, Asset data)                               { return http.addAsset(name, title, Type.SENSOR, data, null); }
+  public String addAsset(String name, String title, Asset data, String unit)                  { return http.addAsset(name, title, Type.SENSOR, data, unit); }
+  public String addAsset(String name, String title, String type, String profile)              { return http.addAsset(name, title, type, profile, null); }
+  public String addAsset(String name, String title, String type, String profile, String unit) { return http.addAsset(name, title, type, profile, unit); }
   
-  // Add specific asset of specific type
-  public String addInteger( String name, String title, Type type) { return http.addAsset(name, title, type, Asset.INTEGER); }
-  public String addNumber(  String name, String title, Type type) { return http.addAsset(name, title, type, Asset.NUMBER); }
-  public String addBoolean( String name, String title, Type type) { return http.addAsset(name, title, type, Asset.BOOLEAN); }
-  public String addString(  String name, String title, Type type) { return http.addAsset(name, title, type, Asset.STRING); }
-  public String addPosition(String name, String title, Type type) { return http.addAsset(name, title, type, Asset.POSITION); }
-  public String addColor(   String name, String title, Type type) { return http.addAsset(name, title, type, Asset.COLOR); }
-  public String addLocation(String name, String title, Type type) { return http.addAsset(name, title, type, Asset.LOCATION); }
+  // Add asset of datatype
+  public String addInteger( String name, String title, Type type) { return http.addAsset(name, title, type, Asset.INTEGER,  null); }
+  public String addNumber(  String name, String title, Type type) { return http.addAsset(name, title, type, Asset.NUMBER,   null); }
+  public String addBoolean( String name, String title, Type type) { return http.addAsset(name, title, type, Asset.BOOLEAN,  null); }
+  public String addString(  String name, String title, Type type) { return http.addAsset(name, title, type, Asset.STRING,   null); }
+  public String addPosition(String name, String title, Type type) { return http.addAsset(name, title, type, Asset.POSITION, null); }
+  public String addColor(   String name, String title, Type type) { return http.addAsset(name, title, type, Asset.COLOR,    null); }
+  public String addLocation(String name, String title, Type type) { return http.addAsset(name, title, type, Asset.LOCATION, null); }
 
-  // Add specific asset of default type SENSOR
-  public String addInteger( String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.INTEGER); }
-  public String addNumber(  String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.NUMBER); }
-  public String addBoolean( String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.BOOLEAN); }
-  public String addString(  String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.STRING); }
-  public String addPosition(String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.POSITION); }
-  public String addColor(   String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.COLOR); }
-  public String addLocation(String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.LOCATION); }
+  // Add asset of datatype with default type SENSOR
+  public String addInteger( String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.INTEGER,  null); }
+  public String addNumber(  String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.NUMBER,   null); }
+  public String addBoolean( String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.BOOLEAN,  null); }
+  public String addString(  String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.STRING,   null); }
+  public String addPosition(String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.POSITION, null); }
+  public String addColor(   String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.COLOR,    null); }
+  public String addLocation(String name, String title) { return http.addAsset(name, title, Type.SENSOR, Asset.LOCATION, null); }
+  
+  // Add asset of datatype with default type SENSOR and UNIT
+  public String addInteger( String name, String title, String unit) { return http.addAsset(name, title, Type.SENSOR, Asset.INTEGER, unit); }
+  public String addNumber(  String name, String title, String unit) { return http.addAsset(name, title, Type.SENSOR, Asset.NUMBER, unit); }
   
   /**
    * Set the value of your asset through Htpp. Useful for setting initial values before starting Mqtt and the main program loop.
@@ -132,10 +181,7 @@ public class Device implements Runnable {
    * @param asset name of the asset
    * @param value value for this asset. Allowed primitives are `boolean`, `float`, `int`, `double` and `String`
    */  
-  public String setAssetState(String asset, boolean value)
-  {
-    return http.setAssetState(asset, value);
-  }
+  public String setAssetState(String asset, boolean value) { return http.setAssetState(asset, value); }
   public String setAssetState(String asset, float   value) { return http.setAssetState(asset, value); }
   public String setAssetState(String asset, int     value) { return http.setAssetState(asset, value); }
   public String setAssetState(String asset, double  value) { return http.setAssetState(asset, value); }

@@ -65,20 +65,12 @@ public class Http {
   * @param data proconfigured data type. Options include `INTEGER`, `NUMBER`, `STRING`, `BOOLEAN` and `GPS`
   * @return
   */
- public String addAsset(String name, String title, Type type, Asset profile)
+ public String addAsset(String name, String title, Type type, Asset profile, String unit)
  {
-   return addAsset(name, title, type.name().toLowerCase(), profile.getProfile());
+   return addAsset(name, title, type.name().toLowerCase(), profile.getProfile(), unit);
  }
  
- /****
-  * Instead of using the preconfigured data types, you can also set the data type of your sensor manually.
-  * @param name unique idenfitier on device level
-  * @param title the display title
-  * @param type possible types are `sensor`, `actuator`, `virtual`
-  * @param profile data type. Simple types are `integer`, `number`, `boolean` and `string`. Complex json is also allowed; for example `\"number\": {\"type\": \"integer\"}, \"message\": {\"type\": \"string\"}`
-  * @return
-  */
- public String addAsset(String name, String title, String type, String profile)
+ public String addAsset(String name, String title, String type, String profile, String unit)
  {
    StringBuffer response = new StringBuffer();
 
@@ -100,7 +92,10 @@ public class Http {
      sb.append(String.format("\"name\":\"%s\",",  name));
      sb.append(String.format("\"title\":\"%s\",", title));
      sb.append(String.format("\"is\":\"%s\",",    type));
-     sb.append(String.format("\"profile\":{\"type\": %s}", profile));  // profile
+     if(unit==null)
+       sb.append(String.format("\"profile\":{\"type\": %s}", profile));  // profile
+     else
+       sb.append(String.format("\"profile\":{\"type\": %s, \"unit\": \" %s\"}", profile, unit));  // profile
      
      String urlParameters = sb.toString();
     

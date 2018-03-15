@@ -12,11 +12,15 @@ Several basic examples are found in the `/src/examples` folder.
 * `Actuation.java` toggle a boolean from AllThingsTalk _(actuation)_
 * `BinaryPayload.java` send data of multiple assets together in one binary payload. The corresponding .json file for decoding the payload in AllThingsTalk can be found in the same folder.
 
----
+### Device Credentials
 
-For more information, please check out our [documentation](http://docs.allthingstalk.com/developers/sdk/java)
+You can either set them globally, using the same credentials for all applications using the sdk.
+Or you can set them locally in a specific sketch, overriding the global settings.
 
----
+Depending on how you initialize the device object in your application, the global or local credentials will be used.
+
+* `device = new Device(this, "your_device_id", "your_device_token");` will use the provided local credentials
+* `device = new Device(this);` will use the global credentials from the keys.json file
 
 ### Raspberry Pi support
 
