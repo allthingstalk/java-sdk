@@ -3,7 +3,7 @@ Java SDK
 
 ### Installation
 
-Download the repository and add the `ATT_IoT.jar` file to your projects build path.
+Get the `jar` from the Release page and include it in your project.
 
 ### Examples
 
@@ -40,3 +40,11 @@ Add the following _jars_ to your project
 * `pi4j-gpio-extension.jar`
 
 You can download the _pi4j_ library [here](http://pi4j.com/download.html).
+
+## Building
+
+You can build the project locally using supplied `gradlew` wrapper:
+
+```bash
+gradlew jar
+```

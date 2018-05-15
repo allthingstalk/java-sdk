@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation 'org.json:json:20180130'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.+'
+}
+
+repositories {
+    jcenter()
+}
+
+jar {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                   'Implementation-Version': project.version)
+    }
+}
