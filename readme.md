@@ -1,4 +1,4 @@
-Java SDK
+Java SDK [![Build Status](https://travis-ci.org/allthingstalk/java-sdk.svg?branch=master)](https://travis-ci.org/allthingstalk/java-sdk)
 ---
 
 ### Installation
