@@ -48,3 +48,5 @@ You can build the project locally using supplied `gradlew` wrapper:
 ```bash
 gradlew jar
 ```
+
+This will produce `.jar` in the `build/libs` directory.
