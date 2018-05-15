@@ -23,43 +23,39 @@ import io.att.util.Device;
  */
 
 public class Counter implements AttDevice {
-  
-  // device credentials
-  private static final String deviceId    = "OlnVkJ7icxvjwVAtApjNsK6O";
-  private static final String deviceToken = "maker:4Vq6sSifNiMtW1VeVqo1ECtZNsnFiLzT3dybVcR";
 
-  static Device device;
- 
-  // variables
-  static int count = 1;
+    // device credentials
+    private static final String deviceId = "";
+    private static final String deviceToken = "";
 
-  public void setup()
-  {
-    // Initialize the device
-    device = new Device(this, deviceId, deviceToken);
+    static Device device;
 
-    // Add asset (and optionally set an initial value)
-    device.addInteger("Counter", "Counter", "ticks");
-    device.setAssetState("Counter", count);
-  
-    // Initializing done. Start looping
-    device.start(3);  // one loop every 3 seconds
-  }
+    // variables
+    static int count = 1;
 
-  public void loop()
-  {
-    count++;
-    device.publish("Counter", count);
-  }
-  
-  public void callback(String asset, String value)
-  {
-    // do something with incoming data here
-  }
-  
-  //
-  public static void main(String[] args)
-  {
-    new Counter().setup();
-  }  
+    public void setup() {
+        // Initialize the device
+        device = new Device(this, deviceId, deviceToken);
+
+        // Add asset (and optionally set an initial value)
+        device.addInteger("Counter", "Counter", "ticks");
+        device.setAssetState("Counter", count);
+
+        // Initializing done. Start looping
+        device.start(3);  // one loop every 3 seconds
+    }
+
+    public void loop() {
+        count++;
+        device.publish("Counter", count);
+    }
+
+    public void callback(String asset, String value) {
+        // do something with incoming data here
+    }
+
+    //
+    public static void main(String[] args) {
+        new Counter().setup();
+    }
 }

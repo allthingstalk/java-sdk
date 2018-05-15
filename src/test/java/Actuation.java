@@ -24,49 +24,44 @@ import io.att.util.Type;
  */
 
 public class Actuation implements AttDevice {
-  
-  // device credentials
-  private static final String deviceId  = "";
-  private static final String token     = "";
 
-  static Device device;
- 
-  // variables
-  static boolean ledValue;
+    // device credentials
+    private static final String deviceId = "";
+    private static final String token = "";
 
-  public void setup()
-  {
-    // Initialize the device
-    device = new Device(this, deviceId, token);
+    static Device device;
 
-    // Add asset (and optionally set an initial value)
-    device.addBoolean("Led", "Led", Type.ACTUATOR);
-    device.setAssetState("Led", false);
-  
-    // Initializing done. Start looping
-    device.start(3);  // one loop every 3 seconds
-  }
+    // variables
+    static boolean ledValue;
 
-  public void loop()
-  {
-    // do something with outgoing data here
-  }
-  
-  public void callback(String asset, String value)
-  {
-    if(asset.equals("Led"))
-    {
-      ledValue = Boolean.parseBoolean(value);
-      if(ledValue == true)
-        System.out.println("Led is ON");
-      else
-        System.out.println("Led is OFF");
+    public void setup() {
+        // Initialize the device
+        device = new Device(this, deviceId, token);
+
+        // Add asset (and optionally set an initial value)
+        device.addBoolean("Led", "Led", Type.ACTUATOR);
+        device.setAssetState("Led", false);
+
+        // Initializing done. Start looping
+        device.start(3);  // one loop every 3 seconds
     }
-  }
-  
-  //
-  public static void main(String[] args)
-  {
-    new Actuation().setup();
-  }  
+
+    public void loop() {
+        // do something with outgoing data here
+    }
+
+    public void callback(String asset, String value) {
+        if (asset.equals("Led")) {
+            ledValue = Boolean.parseBoolean(value);
+            if (ledValue == true)
+                System.out.println("Led is ON");
+            else
+                System.out.println("Led is OFF");
+        }
+    }
+
+    //
+    public static void main(String[] args) {
+        new Actuation().setup();
+    }
 }

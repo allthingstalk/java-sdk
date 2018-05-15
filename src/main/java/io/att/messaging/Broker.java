@@ -1,5 +1,3 @@
-package io.att.util;
-
 /*    _   _ _ _____ _    _              _____     _ _     ___ ___  _  __
  *   /_\ | | |_   _| |_ (_)_ _  __ _ __|_   _|_ _| | |__ / __|   \| |/ /
  *  / _ \| | | | | | ' \| | ' \/ _` (_-< | |/ _` | | / / \__ \ |) | ' <
@@ -21,22 +19,18 @@ package io.att.util;
  * limitations under the License.
  */
 
-public enum Asset {
-  
-  INTEGER("\"integer\""),
-  NUMBER("\"number\""),
-  STRING("\"string\""),
-  BOOLEAN("\"boolean\""),
-  LOCATION("\"object\",\"properties\":{\"latitude\":{\"type\":\"number\"}, \"longitude\":{\"type\":\"number\"}, \"altitude\":{\"type\":\"number\"}}}"),
-  POSITION("\"object\",\"properties\":{\"x\":{\"type\":\"number\"}, \"y\":{\"type\":\"number\"}, \"z\":{\"type\":\"number\"}}}"),
-  COLOR("\"object\",\"properties\":{\"r\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255},\"g\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255},\"b\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":255}}}");
-  
-  private String profile;
 
-  private Asset(String profile)
-  {
-    this.profile = profile;
-  }
+package io.att.messaging;
 
-  public String getProfile() { return profile; }
+
+public class Broker {
+
+    public static String broker = "api.allthingstalk.io";
+    private static boolean ssl = true;
+    public static int port = ssl ? 8883 : 1883;
+    private static String protocol = ssl ? "ssl://" : "tcp://";
+
+    public static String getUrl() {
+        return protocol + broker + ":" + port;
+    }
 }
